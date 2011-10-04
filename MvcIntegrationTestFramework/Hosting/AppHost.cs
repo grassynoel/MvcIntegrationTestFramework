@@ -17,7 +17,7 @@ namespace MvcIntegrationTestFramework.Hosting
     {
         private readonly AppDomainProxy _appDomainProxy; // The gateway to the ASP.NET-enabled .NET appdomain
 
-        private AppHost(string appPhysicalDirectory, string virtualDirectory = "/")
+        public AppHost(string appPhysicalDirectory, string virtualDirectory = "/")
         {
             _appDomainProxy = (AppDomainProxy)ApplicationHost.CreateApplicationHost(typeof(AppDomainProxy), virtualDirectory, appPhysicalDirectory);
             _appDomainProxy.RunCodeInAppDomain(() =>
@@ -28,10 +28,29 @@ namespace MvcIntegrationTestFramework.Hosting
             });
         }
 
-        public void Start(Action<BrowsingSession> testScript)
+        public void Start(Action<BrowsingSession> testScript, BrowsingSession browsingSession = null)
         {
             var serializableDelegate = new SerializableDelegate<Action<BrowsingSession>>(testScript);
-            _appDomainProxy.RunBrowsingSessionInAppDomain(serializableDelegate);
+            _appDomainProxy.RunBrowsingSessionInAppDomain(serializableDelegate, browsingSession);
+        }
+
+        public TResult SimulateBrowsingSession<TResult>(Func<BrowsingSession, TResult> testScript)
+        {
+            var serializableDelegate = new SerializableDelegate<Func<BrowsingSession, TResult>>(testScript);
+            FuncExecutionResult<TResult> result = _appDomainProxy.RunBrowsingSessionInAppDomain2(serializableDelegate);
+            CopyFields<object>(result.DelegateCalled.Delegate.Target, testScript.Target);
+            return result.DelegateCallResult;
+        }
+
+        private static void CopyFields<T>(T from, T to) where T : class
+        {
+            if ((from != null) && (to != null))
+            {
+                foreach (FieldInfo info in from.GetType().GetFields())
+                {
+                    info.SetValue(to, info.GetValue(from));
+                }
+            }
         }
 
         #region Initializing app & interceptors

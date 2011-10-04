@@ -25,6 +25,18 @@ namespace MvcIntegrationTestFramework.Browsing
             return ProcessRequest(url, HttpVerbs.Get, new NameValueCollection());
         }
 
+        private static BrowsingSession _instance;
+
+        public static BrowsingSession Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = new BrowsingSession();
+                return _instance;
+            }
+        }
+
         /// <summary>
         /// Sends a post to your url. Url should NOT start with a /
         /// </summary>

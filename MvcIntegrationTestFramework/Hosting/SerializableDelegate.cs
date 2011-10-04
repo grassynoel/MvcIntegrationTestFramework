@@ -1,9 +1,17 @@
 using System;
 using System.Reflection;
 using System.Runtime.Serialization;
+using MvcIntegrationTestFramework.Browsing;
 
 namespace MvcIntegrationTestFramework.Hosting
 {
+    [Serializable]
+    internal class FuncExecutionResult<T>
+    {
+        public SerializableDelegate<Func<BrowsingSession, T>> DelegateCalled { get; set; }
+        public T DelegateCallResult { get; set; }
+    }
+
     /// <summary>
     /// Makes delegates serializable where possible
     /// Used to pass test delegates from the test appdomain into the ASP.NET host appdomain

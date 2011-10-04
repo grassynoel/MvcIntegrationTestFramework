@@ -8,6 +8,9 @@ namespace MvcIntegrationTestFramework
     {
         public static NameValueCollection ConvertFromObject(object anonymous)
         {
+            if (anonymous is NameValueCollection)
+                return (NameValueCollection) anonymous;
+
             var nvc = new NameValueCollection();
             var dict = new RouteValueDictionary(anonymous);
 

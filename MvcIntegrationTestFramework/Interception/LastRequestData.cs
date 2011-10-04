@@ -9,7 +9,7 @@ namespace MvcIntegrationTestFramework.Interception
     /// Static because HttpRuntime.ProcessRequest() exposes no convenient hooks for intercepting the
     /// request processing pipeline, so we're statically attaching an interceptor to all loaded controllers
     /// </summary>
-    internal static class LastRequestData
+    public static class LastRequestData
     {
         public static ActionExecutedContext ActionExecutedContext { get; set; }
         public static ResultExecutedContext ResultExecutedContext { get; set; }
