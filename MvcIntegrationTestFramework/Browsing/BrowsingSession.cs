@@ -12,6 +12,8 @@ namespace MvcIntegrationTestFramework.Browsing
 {
     public class BrowsingSession
     {
+        public const string FormValueListSeparator = "_$_";
+
         public HttpSessionState Session { get; private set; }
         public HttpCookieCollection Cookies { get; private set; }
 

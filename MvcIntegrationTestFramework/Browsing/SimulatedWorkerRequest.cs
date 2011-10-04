@@ -72,7 +72,7 @@ namespace MvcIntegrationTestFramework.Browsing
             var sb = new StringBuilder();
             foreach (string key in formValues)
             {
-                foreach (var formValue in formValues[key].Split(new []{","}, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var formValue in formValues[key].Split(new []{BrowsingSession.FormValueListSeparator}, StringSplitOptions.RemoveEmptyEntries))
                 {
                     sb.AppendFormat("{0}={1}&", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(formValue));    
                 }
